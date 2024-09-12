@@ -21,7 +21,7 @@ class World {
   background_sound = new Audio("audio/background.mp3");
   coin_sound = new Audio("audio/coin.mp3");
   gameWin_sound = new Audio("audio/win.mp3");
- 
+
   jump_sound = new Audio("audio/Jump (2).mp3");
   throwBottle_sound = new Audio("audio/Bottle.mp3");
 
@@ -286,12 +286,6 @@ class World {
 
       this.clearButtons();
       this.createCenteredButton("Retry", () => location.reload(), 200, 100);
-      this.createCenteredButton(
-        "Next Level",
-        () => this.loadNextLevel(),
-        400,
-        100
-      );
     };
   }
 
