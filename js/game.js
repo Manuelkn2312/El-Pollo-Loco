@@ -4,12 +4,10 @@ let keyboard = new Keyboard();
 const fullScreenButton = document.getElementById("FULLSCREEN");
 let isFullScreen = false;
 
-
 function init() {
   canvas = document.getElementById("canvas");
   showStartScreen();
 }
-
 
 function showStartScreen() {
   let ctx = canvas.getContext("2d");
@@ -22,11 +20,6 @@ function showStartScreen() {
   };
 }
 
-/**
- * Adds a button to the canvas with the specified text and callback function.
- * @param {string} text - The text to display on the button.
- * @param {function} callback - The function to call when the button is clicked.
- */
 function addButtonToCanvas(text, callback) {
   const button = document.createElement("button");
   button.innerHTML = text;
@@ -52,7 +45,6 @@ function addButtonToCanvas(text, callback) {
 
   document.body.appendChild(button);
 }
-
 
 function startGame() {
   world = new World(canvas, keyboard);
