@@ -43,11 +43,7 @@ class Endboss extends MovableObject {
       });
   }
 
-  /**
-   * Handles collision with a throwable object.
-   * Reduces energy, checks for death, and plays appropriate animations.
-   * @param {Object} bottle - The object that collided with the Endboss.
-   */
+
   collide(bottle) {
       if (bottle instanceof ThorableObject) {
           this.energy -= 20;

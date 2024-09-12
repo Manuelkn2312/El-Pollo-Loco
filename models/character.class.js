@@ -82,7 +82,7 @@ class Character extends MovableObject {
   ];
 
   world;
-  walking_sound = new Audio("audio/running.ogg");
+  walking_sound = new Audio("audio/walking_sound.ogg");
 
   constructor(keyboard) {
     super().loadImage("img/2_character_pepe/2_walk/W-21.png");
