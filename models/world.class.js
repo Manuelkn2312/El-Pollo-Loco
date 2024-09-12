@@ -15,12 +15,15 @@ class World {
   canThrow = true;
   gameOverScreenShown = false;
   gameWon = false;
+  gameOverSoundPlayed = false;
+  isGameOver = false;
   charHurt_sound = new Audio("audio/hurt char.ogg");
   enemyHurt_sound = new Audio("audio/chicken (2).mp3");
   gameOver_sound = new Audio("audio/game over.mp3");
   background_sound = new Audio("audio/background.mp3");
   coin_sound = new Audio("audio/coin.mp3");
   gameWin_sound = new Audio("audio/win.mp3");
+
   jump_sound = new Audio("audio/Jump (2).mp3");
   throwBottle_sound = new Audio("audio/Bottle.mp3");
 
@@ -55,6 +58,7 @@ class World {
   }
 
   draw() {
+    if (this.isGameOver) return;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
 
@@ -164,7 +168,6 @@ class World {
             if (this.character.energy <= 0) {
               this.character.energy = 0;
               this.gameOver = true;
-              this.gameOver_sound.play();
               this.showGameOverScreen();
             }
           } else if (
@@ -187,7 +190,6 @@ class World {
 
             if (this.character.energy <= 0) {
               this.gameOver = true;
-              this.gameOver_sound.play();
               this.showGameOverScreen();
             }
           }
@@ -229,7 +231,6 @@ class World {
               setTimeout(() => {
                 this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
                 this.gameWon = true;
-                this.gameWin_sound.play();
                 this.showWinScreen();
               }, 2000);
             }
@@ -244,6 +245,13 @@ class World {
   showGameOverScreen() {
     if (this.gameOverScreenShown) return;
     this.gameOverScreenShown = true;
+
+    if (!this.gameOverSoundPlayed) {
+      this.gameOver_sound.play();
+      this.gameOverSoundPlayed = true;
+    }
+    this.charHurt_sound.pause();
+    this.charHurt_sound.currentTime = 0;
 
     const gameOverImage = new Image();
     gameOverImage.src =
@@ -271,6 +279,8 @@ class World {
     gameOverImage.onerror = () => {
       console.error("Failed to load image:", gameOverImage.src);
     };
+
+    this.isGameOver = true;
   }
 
   showWinScreen() {
