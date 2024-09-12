@@ -21,7 +21,6 @@ class World {
   background_sound = new Audio("audio/background.mp3");
   coin_sound = new Audio("audio/coin.mp3");
   gameWin_sound = new Audio("audio/win.mp3");
-
   jump_sound = new Audio("audio/Jump (2).mp3");
   throwBottle_sound = new Audio("audio/Bottle.mp3");
 
@@ -43,7 +42,7 @@ class World {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.drawImage(
       startScreenImage,
-      0,
+      150,
       0,
       this.canvas.width,
       this.canvas.height
