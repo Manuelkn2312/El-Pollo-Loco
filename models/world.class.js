@@ -325,3 +325,4 @@ class World {
     buttons.forEach((button) => button.remove());
   }
 }
+

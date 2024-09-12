@@ -1,49 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <title>Document</title>
-  </head>
+</head>
 
-  <body onload="init()">
+<body onload="init()">
     <h1>El Pollo Loco</h1>
     <div class="all-fullcreen">
-      <img
-        class="Btn"
-        id="FULLSCREEN"
-        src="./img/icons/fullscreen.png"
-        alt="" />
+        <img class="Btn" id="FULLSCREEN" src="./img/icons/fullscreen.png" alt="" />
     </div>
     <canvas id="canvas" width="720" height="480"></canvas>
 
     <div class="Icons">
-      <div class="movement">
-        <div>
-          <img src="./img/icons/letter-a.png" alt="" />
-          <img src="./img/icons/moveLeft.png" alt="" srcset="" />
-          <b>Links</b>
+        <div class="movement">
+            <div>
+                <img src="./img/icons/letter-a.png" alt="" />
+                <img src="./img/icons/moveLeft.png" alt="" />
+                <b>Links</b>
+            </div>
+            <div>
+                <img src="./img/icons/letter-d.png" alt="" />
+                <img src="./img/icons/moveRight.png" alt="" />
+                <b>Rechts</b>
+            </div>
         </div>
-        <div>
-          <img src="./img/icons/letter-d.png" alt="" srcset="" />
-          <img src="./img/icons/moveRight.png" alt="" srcset="" />
-          <b>Rechts</b>
+        <div class="action">
+            <div>
+                <img src="./img/icons/letter-w.png" alt="" />
+                <img src="./img/icons/jump.png" alt="" />
+                <img src="./img/icons/space.png" alt="" />
+                <b>Springen</b>
+            </div>
+            <div>
+                <img src="./img/icons/letter-q.png" alt="" />
+                <b>Werfen</b>
+            </div>
         </div>
-      </div>
-      <div class="action">
-        <div>
-          <img src="./img/icons/letter-w.png" alt="" srcset="" />
-          <img src="./img/icons/jump.png" alt="" srcset="" />
-          <img src="./img/icons/space.png" alt="" srcset="" />
-          <b>Springen</b>
-        </div>
-        <div>
-          <img src="./img/icons/letter-q.png" alt="" />
-          <b>Werfen</b>
-        </div>
-      </div>
     </div>
+
+    <footer class="footer">
+        <h2>Impressum</h2>
+        <p><strong>Vertreten durch:</strong> Manuel LKnöll</p>
+        <p><strong>Adresse:</strong> Musterstraße 1, 12345 Musterstadt, Deutschland</p>
+        <p><strong>Telefon:</strong> +49 153 456789</p>
+        <p><strong>E-Mail:</strong> info@beispiel.de</p>
+    </footer>
+
     <script src="./models/world.class.js"></script>
     <script src="./models/drawable-object.class.js"></script>
     <script src="models/movable-obeject.class.js"></script>
@@ -60,5 +65,5 @@
     <script src="./models/level.class.js"></script>
     <script src="./levels/level1.js"></script>
     <script src="./js/game.js"></script>
-  </body>
+</body>
 </html>
