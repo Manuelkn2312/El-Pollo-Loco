@@ -2,8 +2,73 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  background-image: url(img/5_background/complete_background.png);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  height: 80vh;
+  overflow-x: hidden;
 }
 
+.Btn {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
 canvas {
   background-color: black;
+  position: relative;
+}
+
+.all-fullcreen {
+  display: flex;
+  gap: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.Icons img {
+  width: 48px;
+}
+
+.Icons {
+  display: flex;
+  gap: 100px;
+  font-size: 19px;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.action div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.movement {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.movement div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.game-button {
+  width: 149px;
+  height: 45px;
+  border: none;
+  border-radius: 15px;
+  font-size: 19px;
+  z-index: 99999;
 }

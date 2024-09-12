@@ -1,8 +1,13 @@
 class Character extends MovableObject {
-  height = 280;
-  y = 80;
+  height = 145;
+  width = 100;
+  y = 270;
   speed = 10;
-  otherDirection = false;
+  energy = 100;
+  coins = 0;
+  bottles = 0;
+  bottlesCollected = 0;
+
   IMAGES_WALKING = [
     "img/2_character_pepe/2_walk/W-21.png",
     "img/2_character_pepe/2_walk/W-22.png",
@@ -11,6 +16,7 @@ class Character extends MovableObject {
     "img/2_character_pepe/2_walk/W-25.png",
     "img/2_character_pepe/2_walk/W-26.png",
   ];
+
   IMAGES_JUMPING = [
     "img/2_character_pepe/3_jump/J-31.png",
     "img/2_character_pepe/3_jump/J-32.png",
@@ -22,6 +28,7 @@ class Character extends MovableObject {
     "img/2_character_pepe/3_jump/J-38.png",
     "img/2_character_pepe/3_jump/J-39.png",
   ];
+
   IMAGES_DEAD = [
     "img/2_character_pepe/5_dead/D-51.png",
     "img/2_character_pepe/5_dead/D-52.png",
@@ -31,16 +38,53 @@ class Character extends MovableObject {
     "img/2_character_pepe/5_dead/D-56.png",
     "img/2_character_pepe/5_dead/D-57.png",
   ];
-IMAGES_HURT = [
-  'img/2_character_pepe/4_hurt/H-41.png',
-  'img/2_character_pepe/4_hurt/H-42.png',
-  'img/2_character_pepe/4_hurt/H-43.png',
-];
+
+  IMAGES_HURT = [
+    "img/2_character_pepe/4_hurt/H-41.png",
+    "img/2_character_pepe/4_hurt/H-42.png",
+    "img/2_character_pepe/4_hurt/H-43.png",
+  ];
+
+  IMAGES_HEALTH = [
+    "img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png",
+    "img/7_statusbars/1_statusbar/2_statusbar_health/blue/20.png",
+    "img/7_statusbars/1_statusbar/2_statusbar_health/blue/40.png",
+    "img/7_statusbars/1_statusbar/2_statusbar_health/blue/60.png",
+    "img/7_statusbars/1_statusbar/2_statusbar_health/blue/80.png",
+    "img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png",
+  ];
+
+  IMAGES_COINS = [
+    "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png",
+    "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/80.png",
+    "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/60.png",
+    "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/40.png",
+    "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/20.png",
+    "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png",
+  ];
+
+  IMAGES_BOTTLES = [
+    "img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/100.png",
+    "img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/80.png",
+    "img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/60.png",
+    "img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/40.png",
+    "img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/20.png",
+    "img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png",
+  ];
+
+  IMAGES_HEALTHBAR = [
+    "img/7_statusbars/2_statusbar_endboss/green/green0.png",
+    "img/7_statusbars/2_statusbar_endboss/green/green20.png",
+    "img/7_statusbars/2_statusbar_endboss/green/green40.png",
+    "img/7_statusbars/2_statusbar_endboss/green/green60.png",
+    "img/7_statusbars/2_statusbar_endboss/green/green80.png",
+    "img/7_statusbars/2_statusbar_endboss/green/green100.png",
+  ];
 
   world;
-  walking_sound = new Audio("audio/walk.mp3");
+  walking_sound = new Audio("audio/running.ogg");
 
-  constructor() {
+  constructor(keyboard) {
     super().loadImage("img/2_character_pepe/2_walk/W-21.png");
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_JUMPING);
@@ -49,44 +93,75 @@ IMAGES_HURT = [
     this.applyGravity();
     this.animate();
   }
+
   animate() {
     setInterval(() => {
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-        this.moveRight();
-        this.otherDirection = false;
-        this.walking_sound.play();
-      }
-      
-      if (this.world.keyboard.LEFT && this.x > 0) {
-        this.moveLeft();
-        this.otherDirection = true;
-        this.walking_sound.play();
-      }
-      if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-        this.jump();
-      }
+      if (!this.world.gameWon) {
+        const isEndbossDead =
+          this.world.level.endboss && this.world.level.endboss.isDead;
 
-      this.world.camera_x = -this.x + 100;
+        if (
+          this.world.keyboard.RIGHT &&
+          this.x < this.world.level.level_end_x
+        ) {
+          this.moveRight();
+          this.otherDirection = false;
+          if (this.walking_sound.paused && !isEndbossDead) {
+            this.walking_sound.play();
+          }
+        } else if (this.world.keyboard.LEFT && this.x > 0) {
+          this.moveLeft();
+          this.otherDirection = true;
+          if (this.walking_sound.paused && !isEndbossDead) {
+            this.walking_sound.play();
+          }
+        } else {
+          if (!this.walking_sound.paused && !isEndbossDead) {
+            this.walking_sound.pause();
+          }
+        }
+
+        if (
+          (this.world.keyboard.UP || this.world.keyboard.SPACE) &&
+          !this.isAboveGround()
+        ) {
+          this.jump();
+        }
+
+        this.world.camera_x = -this.x + 100;
+      } else {
+        this.walking_sound.pause();
+      }
     }, 1000 / 60);
 
     setInterval(() => {
-      
-      if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
-      } else if (this.isHurt()) {
-        this.playAnimation(this.IMAGES_HURT);
-      
-      } else if (this.isAboveGround()) {
-        this.playAnimation(this.IMAGES_JUMPING);
-      } else {
-        if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+      if (!this.world.gameOver) {
+        if (this.isDead()) {
+          this.playAnimation(this.IMAGES_DEAD);
+        } else if (this.isHurt()) {
+          this.playAnimation(this.IMAGES_HURT);
+        } else if (this.isAboveGround()) {
+          this.playAnimation(this.IMAGES_JUMPING);
+        } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
           this.playAnimation(this.IMAGES_WALKING);
         }
       }
     }, 50);
   }
 
-  jump() {
-    this.speedY = 30;
+  collectCoin() {
+    this.coins += 1;
+  }
+
+  collectBottle() {
+    this.bottles += 1;
+  }
+
+  throwBottle() {
+    if (this.bottles > 0) {
+      this.bottles -= 1;
+      return true;
+    }
+    return false;
   }
 }

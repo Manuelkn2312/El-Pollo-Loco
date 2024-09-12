@@ -1,48 +1,121 @@
-class StatusBar extends MovableObject {
-    IMAGES = [
-        "img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png",
-        "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/20.png",
-        "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/40.png",
-        "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/60.png",
-        "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/80.png",
-        "img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png"
-    ];
+class StatusBar extends DrawableObject {
+  constructor(path, x, y) {
+    super();
+    this.IMAGES = path;
+    this.loadImages(this.IMAGES);
+    this.x = x;
+    this.y = y;
+    this.width = 200;
+    this.height = 50;
+    this.healthPercentage = 100;
+    this.coinsPercentage = 0;
+    this.bottlesPercentage = 0;
+    this.setHealthPercentage(100);
+    this.setCoinsPercentage(0);
+    this.setBottlesPercentage(0);
+  }
 
-    percentage = 100; 
+  setHealthPercentage(percentage) {
+    this.healthPercentage = percentage;
+    let path = this.IMAGES[this.resolveHealthImageIndex()];
+    this.img = this.imageCache[path];
+  }
 
-    constructor() {
-        super();
-        this.loadImages(this.IMAGES);
-        this.setPercentage(100);  
-        this.width = 200;
-        this.height = 60;
-        this.x = 40;
-        this.y = 0;
+  resolveHealthImageIndex() {
+    if (this.healthPercentage == 100) {
+      return 5;
+    } else if (this.healthPercentage > 80) {
+      return 4;
+    } else if (this.healthPercentage > 60) {
+      return 3;
+    } else if (this.healthPercentage > 40) {
+      return 2;
+    } else if (this.healthPercentage > 20) {
+      return 1;
+    } else {
+      return 0;
     }
+  }
 
+  setCoinsPercentage(percentage) {
+    this.coinsPercentage = percentage;
+    let path = this.IMAGES[this.resolveCoinsImageIndex()];
+    this.img = this.imageCache[path];
+  }
 
-    setPercentage(percentage) {
-        this.percentage = percentage;
-        let path = this.IMAGES[this.resolveImageIndex()]; 
-        this.img = this.imageCache[path];
+  resolveCoinsImageIndex() {
+    if (this.coinsPercentage == 100) {
+      return 0;
+    } else if (this.coinsPercentage > 80) {
+      return 1;
+    } else if (this.coinsPercentage > 60) {
+      return 2;
+    } else if (this.coinsPercentage > 40) {
+      return 3;
+    } else if (this.coinsPercentage > 20) {
+      return 4;
+    } else {
+      return 5;
     }
-    resolveImageIndex() {
-        if (this.percentage == 100) {
-            return 0;
-        } else if (this.percentage > 80) {
-            return 1;
-        } else if (this.percentage > 60) {
-            return 2;
-        } else if (this.percentage > 40) {
-            return 3;
-        } else if (this.percentage > 20) {
-            return 4;
-        } else {
-            return 5;
-        }
+  }
+
+  setBottlesPercentage(percentage) {
+    this.bottlesPercentage = percentage;
+    let path = this.IMAGES[this.resolveBottlesImageIndex()];
+    this.img = this.imageCache[path];
+  }
+
+  resolveBottlesImageIndex() {
+    if (this.bottlesPercentage == 100) {
+      return 0;
+    } else if (this.bottlesPercentage > 80) {
+      return 1;
+    } else if (this.bottlesPercentage > 60) {
+      return 2;
+    } else if (this.bottlesPercentage > 40) {
+      return 3;
+    } else if (this.bottlesPercentage > 20) {
+      return 4;
+    } else {
+      return 5;
     }
+  }
 
-  
-      }
+  setHealthEndbossPercentage(percentage) {
+    this.healthEndbossPercentage = percentage;
+    let path = this.IMAGES[this.resolveEndbossHealthImageIndex()];
+    this.img = this.imageCache[path];
+  }
 
+  resolveEndbossHealthImageIndex() {
+    if (this.healthPercentage == 100) {
+      return 5;
+    } else if (this.healthEndbossPercentage > 80) {
+      return 4;
+    } else if (this.healthEndbossPercentage > 60) {
+      return 3;
+    } else if (this.healthEndbossPercentage > 40) {
+      return 2;
+    } else if (this.healthEndbossPercentage > 20) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
 
+  addPoints(points) {
+    this.coinsPercentage += points;
+    if (this.coinsPercentage > 100) {
+      this.coinsPercentage = 100;
+    }
+    this.setCoinsPercentage(this.coinsPercentage);
+  }
+
+  addBottlesPoints(points) {
+    this.bottlesPercentage += points;
+    if (this.bottlesPercentage > 100) {
+      this.bottlesPercentage = 100;
+    }
+    this.setBottlesPercentage(this.bottlesPercentage);
+  }
+}

@@ -1,29 +1,38 @@
-// class Coin extends MovableObject {
-//     IMAGES_WALKING = [
-//         'img/8_coin/coin_1.png',
-//         'img/8_coin/coin_2.png'
-//     ];
+/**
+ * Represents a coin in the game, which is a movable object.
+ * @extends MovableObject
+ */
+class Coin extends MovableObject {
+  /**
+   * The width of the coin.
+   * @type {number}
+   */
+  width = 70;
 
-//     constructor(statusBar) {
-//         super().loadImage(this.IMAGES_WALKING[0]);
-//         this.loadImages(this.IMAGES_WALKING);
-//         this.x = 400 + Math.random() * 1800;  
-//         this.y = 100 + Math.random() * 120;   
-//         this.width = 150;
-//         this.height = 150;
-//         this.statusBar = statusBar; 
-//         this.coinsCollected = 0;  
-//         this.animate();
-//     }
+  /**
+   * The height of the coin.
+   * @type {number}
+   */
+  height = 80;
 
-//     animate() {
-//         setInterval(() => {
-//             this.playAnimation(this.IMAGES_WALKING);  
-//         }, 200);
-//     }
+  /**
+   * Creates a new Coin instance.
+   * @param {string} path - The path to the image of the coin.
+   * @param {number} x - The x-coordinate of the coin.
+   * @param {number} y - The y-coordinate of the coin.
+   */
+  constructor(path, x, y) {
+    super().loadImage(path);
+    /**
+     * The x-coordinate of the coin.
+     * @type {number}
+     */
+    this.x = x;
 
-//     collectCoin() {
-//         this.coinsCollected++; 
-//         this.statusBar.setPercentageCoinBarAmount(this.coinsCollected);  
-//     }
-// }
+    /**
+     * The y-coordinate of the coin.
+     * @type {number}
+     */
+    this.y = y;
+  }
+}
