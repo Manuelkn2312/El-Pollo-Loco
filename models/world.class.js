@@ -285,7 +285,7 @@ class World {
       this.ctx.drawImage(winImage, centerX, centerY, imageWidth, imageHeight);
 
       this.clearButtons();
-      this.createCenteredButton("Retry", () => location.reload(), 200, 100);
+      this.createCenteredButton("Retry", () => location.reload(), 300, 150);
     };
   }
 
