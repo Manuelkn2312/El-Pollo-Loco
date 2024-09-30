@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="./img/icons/el-pollo-loco.svg" type="image/x-icon" />
+
     <title>Document</title>
   </head>
 
@@ -11,11 +13,9 @@
     <div class="head">
       <h1>El Pollo Loco</h1>
       <div class="all-fullcreen">
-        <img
-          class="Btn"
-          id="FULLSCREEN"
-          src="./img/icons/fullscreen.png"
-          alt="" />
+        <img class="fullscreen-button" id="mute" src="./img/icons/mute.png" alt="" />
+        <img class="fullscreen-button" id="sound" src="./img/icons/sound.png" alt="" srcset="" />
+        <img class="Btn" id="FULLSCREEN" src="./img/icons/fullscreen.png" alt="" />
       </div>
     </div>
     <canvas id="canvas" width="720" height="480"></canvas>
@@ -46,10 +46,6 @@
         </div>
       </div>
     </div>
-    <audio id="background-audio" loop>
-      <source src="path/to/your/background-music.mp3" type="audio/mpeg" />
-      Your browser does not support the audio element.
-    </audio>
 
     <button id="openModalBtn">Impressum anzeigen</button>
 
@@ -58,10 +54,7 @@
         <span class="closeBtn">&times;</span>
         <h2>Impressum</h2>
         <p><strong>Vertreten durch:</strong> Manuel Knöll</p>
-        <p>
-          <strong>Adresse:</strong> Musterstraße 1, 12345 Musterstadt,
-          Deutschland
-        </p>
+        <p><strong>Adresse:</strong> Musterstraße 1, 12345 Musterstadt, Deutschland</p>
         <p><strong>Telefon:</strong> +49 153 456789</p>
         <p><strong>E-Mail:</strong> info@manuel.de</p>
       </div>
@@ -84,6 +77,5 @@
     <script src="./levels/level1.js"></script>
     <script src="./js/game.js"></script>
     <script src="./models/modal.class.js"></script>
-    <script src="./js/audio-control.js"></script>
   </body>
 </html>

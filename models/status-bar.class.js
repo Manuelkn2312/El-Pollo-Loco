@@ -8,11 +8,9 @@ class StatusBar extends DrawableObject {
     this.width = 200;
     this.height = 50;
     this.healthPercentage = 100;
-    this.coinsPercentage = 0;
-    this.bottlesPercentage = 0;
+    this.coinsAndBottlesPercentage = 0;
     this.setHealthPercentage(100);
-    this.setCoinsPercentage(0);
-    this.setBottlesPercentage(0);
+    this.setCoinsAndBottlesPercentage(0);
   }
 
   setHealthPercentage(percentage) {
@@ -37,69 +35,25 @@ class StatusBar extends DrawableObject {
     }
   }
 
-  setCoinsPercentage(percentage) {
-    this.coinsPercentage = percentage;
-    let path = this.IMAGES[this.resolveCoinsImageIndex()];
+  setCoinsAndBottlesPercentage(percentage) {
+    this.coinsAndBottlesPercentage = percentage;
+    let path = this.IMAGES[this.resolveCoinsAndBottlesImageIndex()];
     this.img = this.imageCache[path];
   }
 
-  resolveCoinsImageIndex() {
-    if (this.coinsPercentage == 100) {
+  resolveCoinsAndBottlesImageIndex() {
+    if (this.coinsAndBottlesPercentage == 100) {
       return 0;
-    } else if (this.coinsPercentage > 80) {
+    } else if (this.coinsAndBottlesPercentage > 80) {
       return 1;
-    } else if (this.coinsPercentage > 60) {
+    } else if (this.coinsAndBottlesPercentage > 60) {
       return 2;
-    } else if (this.coinsPercentage > 40) {
+    } else if (this.coinsAndBottlesPercentage > 40) {
       return 3;
-    } else if (this.coinsPercentage > 20) {
+    } else if (this.coinsAndBottlesPercentage > 20) {
       return 4;
     } else {
       return 5;
-    }
-  }
-
-  setBottlesPercentage(percentage) {
-    this.bottlesPercentage = percentage;
-    let path = this.IMAGES[this.resolveBottlesImageIndex()];
-    this.img = this.imageCache[path];
-  }
-
-  resolveBottlesImageIndex() {
-    if (this.bottlesPercentage == 100) {
-      return 0;
-    } else if (this.bottlesPercentage > 80) {
-      return 1;
-    } else if (this.bottlesPercentage > 60) {
-      return 2;
-    } else if (this.bottlesPercentage > 40) {
-      return 3;
-    } else if (this.bottlesPercentage > 20) {
-      return 4;
-    } else {
-      return 5;
-    }
-  }
-
-  setHealthEndbossPercentage(percentage) {
-    this.healthEndbossPercentage = percentage;
-    let path = this.IMAGES[this.resolveEndbossHealthImageIndex()];
-    this.img = this.imageCache[path];
-  }
-
-  resolveEndbossHealthImageIndex() {
-    if (this.healthPercentage == 100) {
-      return 5;
-    } else if (this.healthEndbossPercentage > 80) {
-      return 4;
-    } else if (this.healthEndbossPercentage > 60) {
-      return 3;
-    } else if (this.healthEndbossPercentage > 40) {
-      return 2;
-    } else if (this.healthEndbossPercentage > 20) {
-      return 1;
-    } else {
-      return 0;
     }
   }
 
