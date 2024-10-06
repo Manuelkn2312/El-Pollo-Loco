@@ -78,7 +78,6 @@ class World {
 
   onMusic(){
     this.background_sound.play();
-
     this.mute = false;
   }
 
@@ -103,7 +102,18 @@ class World {
     if (this.isGameOver) return;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
+    this.addObjects();
 
+    if (this.gameOver) {
+      this.showGameOverScreen();
+    } else if (this.gameWon) {
+      this.showWinScreen();
+    } else {
+      requestAnimationFrame(() => this.draw());
+    }
+  }
+
+  addObjects(){
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
@@ -117,14 +127,6 @@ class World {
     this.addToMap(this.statusBarCoins);
     this.addToMap(this.statusBarBottles);
     this.addToMap(this.endbossEnergy);
-
-    if (this.gameOver) {
-      this.showGameOverScreen();
-    } else if (this.gameWon) {
-      this.showWinScreen();
-    } else {
-      requestAnimationFrame(() => this.draw());
-    }
   }
 
   addObjectsToMap(objects) {
@@ -187,51 +189,99 @@ class World {
       if (enemy instanceof Endboss) {
         this.endbossInstance = enemy;
       }
-
       if (this.character.isColliding(enemy)) {
-        if (!enemy.isDead) {
-          if (enemy instanceof Endboss) {
-            this.character.energy -= 5;
-            this.statusBar.setHealthPercentage(this.character.energy);
-            if(!this.mute) {
-              this.charHurt_sound.play();
-            }
-
-            if (this.character.energy <= 0) {
-              this.character.energy = 0;
-              this.gameOver = true;
-              this.charHurt_sound.pause();
-              this.showGameOverScreen();
-            }
-          } else if (
-            this.character.y + this.character.height > enemy.y &&
-            this.character.y + this.character.height < enemy.y + enemy.height
-          ) {
-            enemy.dead();
-            this.character.speedY = 25;
-            enemy.speed = 0;
-            if(!this.mute) {
-              this.enemyHurt_sound.play();
-            }
-            setTimeout(() => {
-              this.level.enemies = this.level.enemies.filter((e) => e !== enemy);
-            }, 1000);
-          } else {
-            this.character.hit();
-            this.statusBar.setHealthPercentage(this.character.energy);
-            if(!this.mute) {
-              this.charHurt_sound.play();
-            }
-            if (this.character.energy <= 0) {
-              this.gameOver = true;
-              this.charHurt_sound.pause();
-              this.showGameOverScreen();
-            }
-          }
-        }
+        this.checkIfEnemyIsNotDead(enemy);
       }
     });
 
+    this.checkCoinCollision();
+    this.checkBottleCollision();
+    this.checkThrowableObjects();
+    this.moveEndbossTowardsCharacter();
+  }
+
+  checkThrowableObjects() {
+    this.throwableObjects.forEach((bottle) => {
+      this.level.enemies.forEach((enemy) => {
+        if (bottle.isColliding(enemy)) {
+          if (enemy instanceof Endboss) {
+            enemy.collide(bottle);
+            this.throwableObjects.splice(this.throwableObjects.indexOf(bottle), 1);
+            this.endbossEnergy.setHealthPercentage(enemy.energy);
+            this.checkIfEnemyIsDead(enemy);
+          }
+        }
+      });
+    });
+  }
+
+  checkIfEnemyIsNotDead(enemy) {
+    if (!enemy.isDead) {
+      if (enemy instanceof Endboss) {
+        this.isInstanceofEndBoss();
+      } else if (this.character.y + this.character.height > enemy.y && this.character.y + this.character.height < enemy.y + enemy.height) {
+        this.enemyIsKilled(enemy);
+      } else {
+        this.isNotInstanceofEndBoss();
+      }
+    }
+  }
+
+  enemyIsKilled(enemy) {
+    enemy.dead();
+    this.character.speedY = 25;
+    enemy.speed = 0;
+    if(!this.mute) {
+      this.enemyHurt_sound.play();
+    }
+    setTimeout(() => {
+      this.level.enemies = this.level.enemies.filter((e) => e !== enemy);
+    }, 1000);
+  }
+
+  isNotInstanceofEndBoss() {
+    this.character.hit();
+    this.statusBar.setHealthPercentage(this.character.energy);
+    if(!this.mute) {
+      this.charHurt_sound.play();
+    }
+    if (this.character.energy <= 0) {
+      this.gameOver = true;
+      this.charHurt_sound.pause();
+      this.showGameOverScreen();
+    }
+  }
+
+  isInstanceofEndBoss() {
+    this.character.energy -= 5;
+    this.statusBar.setHealthPercentage(this.character.energy);
+    if(!this.mute) {
+      this.charHurt_sound.play();
+    }
+
+    if (this.character.energy <= 0) {
+      this.character.energy = 0;
+      this.gameOver = true;
+      this.charHurt_sound.pause();
+      this.showGameOverScreen();
+    }
+  }
+
+  checkIfEnemyIsDead(enemy) {
+    if (enemy.isDead) {
+      enemy.dead();
+      if(!this.mute) {
+        this.enemyHurt_sound.play();
+      }
+      setTimeout(() => {
+        this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
+        this.gameWon = true;
+        this.showWinScreen();
+      }, 1000);
+    }
+  }
+
+  checkCoinCollision() {
     this.level.coin.forEach((coin) => {
       if (this.character.isColliding(coin)) {
         this.level.coin.splice(this.level.coin.indexOf(coin), 1);
@@ -242,7 +292,9 @@ class World {
         }
       }
     });
+  }
 
+  checkBottleCollision() {
     this.level.bottles.forEach((bottle) => {
       if (this.character.isColliding(bottle)) {
         this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1);
@@ -253,48 +305,22 @@ class World {
         }
       }
     });
-
-    this.throwableObjects.forEach((bottle) => {
-      this.level.enemies.forEach((enemy) => {
-        if (bottle.isColliding(enemy)) {
-          if (enemy instanceof Endboss) {
-            enemy.collide(bottle);
-            this.throwableObjects.splice(this.throwableObjects.indexOf(bottle), 1);
-            this.endbossEnergy.setHealthPercentage(enemy.energy);
-            if (enemy.isDead) {
-              enemy.dead();
-              if(!this.mute) {
-                this.enemyHurt_sound.play();
-              }
-              setTimeout(() => {
-                this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
-                this.gameWon = true;
-                this.showWinScreen();
-              }, 1000);
-            }
-          }
-        }
-      });
-    });
-
-    this.moveEndbossTowardsCharacter();
   }
 
   showGameOverScreen() {
     if (this.gameOverScreenShown) return;
     this.gameOverScreenShown = true;
-
-    if (!this.gameOverSoundPlayed && !this.mute) {
-      this.background_sound.pause();
-      this.gameOver_sound.play();
-      this.gameOverSoundPlayed = true;
-    }
-    this.charHurt_sound.pause();
-    this.charHurt_sound.currentTime = 0;
+    this.playGameOverSound();
 
     const gameOverImage = new Image();
     gameOverImage.src = "img/9_intro_outro_screens/game_over/game over!.png?" + new Date().getTime();
 
+    this.gameOverImage(gameOverImage);
+
+    this.isGameOver = true;
+  }
+
+  gameOverImage(gameOverImage) {
     gameOverImage.onload = () => {
       const imageWidth = gameOverImage.width / 2;
       const imageHeight = gameOverImage.height / 2;
@@ -302,27 +328,28 @@ class World {
       const centerY = (this.canvas.height - imageHeight) / 2;
 
       this.ctx.drawImage(gameOverImage, centerX, centerY, imageWidth, imageHeight);
-
       this.clearButtons();
       this.createCenteredButton("Retry", () => location.reload(), 300, 100);
     };
-
     gameOverImage.onerror = () => {
       console.error("Failed to load image:", gameOverImage.src);
     };
+  }
 
-    this.isGameOver = true;
+  playGameOverSound() {
+    if (!this.gameOverSoundPlayed && !this.mute) {
+      this.background_sound.pause();
+      this.charHurt_sound.pause();
+      this.gameOver_sound.play();
+      this.gameOverSoundPlayed = true;
+      this.charHurt_sound.currentTime = 0;
+    }
   }
 
   showWinScreen() {
     const winImage = new Image();
     winImage.src = "img/9_intro_outro_screens/win/win_2.png";
-
-    if (!this.gameWinSoundPlayed && !this.mute) {
-      this.background_sound.pause();
-      this.gameWin_sound.play();
-      this.gameWinSoundPlayed = true;
-    }
+    this.playWinSound();
 
     winImage.onload = () => {
       const imageWidth = winImage.width / 2;
@@ -336,7 +363,28 @@ class World {
     };
   }
 
+  playWinSound() {
+    if (!this.gameWinSoundPlayed && !this.mute) {
+      this.background_sound.pause();
+      this.gameWin_sound.play();
+      this.gameWinSoundPlayed = true;
+    }
+  }
+
   createCenteredButton(text, callback, x, y) {
+    const button = this.createButton(text)
+    const updateButtonPosition = () => {
+      const canvasRect = this.canvas.getBoundingClientRect();
+      button.style.left = `${canvasRect.left + x}px`;
+      button.style.top = `${canvasRect.top + y}px`;
+    };
+    updateButtonPosition();
+    window.addEventListener("resize", updateButtonPosition);
+    button.onclick = callback;
+    document.body.appendChild(button);
+  }
+
+  createButton(text) {
     const button = document.createElement("button");
     button.innerHTML = text;
     button.className = "game-button";
@@ -344,18 +392,7 @@ class World {
     button.style.border = "none";
     button.style.padding = "10px";
 
-    const updateButtonPosition = () => {
-      const canvasRect = this.canvas.getBoundingClientRect();
-      button.style.left = `${canvasRect.left + x}px`;
-      button.style.top = `${canvasRect.top + y}px`;
-    };
-
-    updateButtonPosition();
-
-    window.addEventListener("resize", updateButtonPosition);
-
-    button.onclick = callback;
-    document.body.appendChild(button);
+    return button;
   }
 
   clearButtons() {
