@@ -9,6 +9,8 @@ class StatusBar extends DrawableObject {
     this.height = 50;
     this.healthPercentage = 100;
     this.coinsAndBottlesPercentage = 0;
+    this.coinsPercentage = 0;
+    this.bottlesPercentage = 0;
     this.setHealthPercentage(100);
     this.setCoinsAndBottlesPercentage(0);
   }
@@ -37,20 +39,19 @@ class StatusBar extends DrawableObject {
 
   setCoinsAndBottlesPercentage(percentage) {
     this.coinsAndBottlesPercentage = percentage;
-    let path = this.IMAGES[this.resolveCoinsAndBottlesImageIndex()];
-    this.img = this.imageCache[path];
+    this.img = this.imageCache[this.IMAGES[this.resolveCoinsAndBottlesImageIndex()]];
   }
 
   resolveCoinsAndBottlesImageIndex() {
     if (this.coinsAndBottlesPercentage === 100) {
       return 0;
-    } else if (this.coinsAndBottlesPercentage > 80) {
+    } else if (this.coinsAndBottlesPercentage >= 80) {
       return 1;
-    } else if (this.coinsAndBottlesPercentage > 60) {
+    } else if (this.coinsAndBottlesPercentage >= 60) {
       return 2;
-    } else if (this.coinsAndBottlesPercentage > 40) {
+    } else if (this.coinsAndBottlesPercentage >= 40) {
       return 3;
-    } else if (this.coinsAndBottlesPercentage > 20) {
+    } else if (this.coinsAndBottlesPercentage >= 20) {
       return 4;
     } else {
       return 5;
