@@ -6,6 +6,7 @@ class World {
   canvas;
   ctx;
   keyboard;
+  document;
   camera_x = 0;
   statusBar = new StatusBar(this.character.IMAGES_HEALTH, 20, 0);
   statusBarCoins = new StatusBar(this.character.IMAGES_COINS, 20, 40);
@@ -18,6 +19,7 @@ class World {
   gameOverSoundPlayed = false;
   gameWinSoundPlayed = false;
   isGameOver = false;
+  mute = false;
   charHurt_sound = new Audio("audio/hurt char.ogg");
   enemyHurt_sound = new Audio("audio/chicken (2).mp3");
   gameOver_sound = new Audio("audio/game over.mp3");
@@ -27,11 +29,57 @@ class World {
   jump_sound = new Audio("audio/Jump (2).mp3");
   throwBottle_sound = new Audio("audio/Bottle.mp3");
 
-  constructor(canvas, keyboard) {
+  constructor(canvas, keyboard, element) {
+    this.document = document;
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
     this.background_sound.play();
+    this.run();
+  }
+
+  run() {
+    this.offMusicWithClick();
+    this.onMusicWithClick();
+    setInterval(() => {
+      this.checkCollision();
+      this.checkThrowObjects();
+    }, 50);
+  }
+
+  offMusicWithClick(){
+    this.document.getElementById('mute').addEventListener('click', () => {
+      this.offMusic();
+  })
+  }
+
+  onMusicWithClick(){
+    this.document.getElementById('sound').addEventListener('click', () => {
+      this.onMusic();
+  })
+  }
+
+  offMusic(){
+    this.background_sound.pause();
+    this.charHurt_sound.pause();
+    this.enemyHurt_sound.pause();
+    this.gameOver_sound.pause();
+    this.coin_sound.pause();
+    this.gameWin_sound.pause();
+    this.jump_sound.pause();
+    this.throwBottle_sound.pause();
+
+    this.mute = true;
+  }
+
+  checkIfMute() {
+    return this.mute;
+  }
+
+  onMusic(){
+    this.background_sound.play();
+
+    this.mute = false;
   }
 
   addButtonToListen(text, callback) {
@@ -108,13 +156,6 @@ class World {
   flipImageBack(mo) {
     mo.x = mo.x * -1;
     this.ctx.restore();
-  }
-
-  run() {
-    setInterval(() => {
-      this.checkCollision();
-      this.checkThrowObjects();
-    }, 50);
   }
 
   checkThrowObjects() {
@@ -308,4 +349,5 @@ class World {
     const buttons = document.querySelectorAll("button");
     buttons.forEach((button) => button.remove());
   }
+
 }

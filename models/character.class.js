@@ -114,10 +114,12 @@ class Character extends MovableObject {
   checkRightOrLeft() {
     const isEndbossDead = this.world.level.endboss && this.world.level.endboss.isDead;
 
+    const mute = world.checkIfMute();
+
     if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-      this.right(isEndbossDead);
+      this.right(isEndbossDead, mute);
     } else if (this.world.keyboard.LEFT && this.x > 0) {
-      this.left(isEndbossDead);
+      this.left(isEndbossDead, mute);
     }
   }
 
@@ -127,18 +129,18 @@ class Character extends MovableObject {
     }
   }
 
-  right(isEndbossDead) {
+  right(isEndbossDead, mute) {
     this.moveRight();
     this.otherDirection = false;
-    if (this.walking_sound.paused && !isEndbossDead) {
+    if (this.walking_sound.paused && !isEndbossDead && !mute) {
       this.walking_sound.play();
     }
   }
 
-  left(isEndbossDead) {
+  left(isEndbossDead, mute) {
     this.moveLeft();
     this.otherDirection = true;
-    if (this.walking_sound.paused && !isEndbossDead) {
+    if (this.walking_sound.paused && !isEndbossDead && !mute) {
       this.walking_sound.play();
     }
   }
