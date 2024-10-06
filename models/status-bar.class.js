@@ -20,7 +20,7 @@ class StatusBar extends DrawableObject {
   }
 
   resolveHealthImageIndex() {
-    if (this.healthPercentage == 100) {
+    if (this.healthPercentage === 100) {
       return 5;
     } else if (this.healthPercentage > 80) {
       return 4;
@@ -42,7 +42,7 @@ class StatusBar extends DrawableObject {
   }
 
   resolveCoinsAndBottlesImageIndex() {
-    if (this.coinsAndBottlesPercentage == 100) {
+    if (this.coinsAndBottlesPercentage === 100) {
       return 0;
     } else if (this.coinsAndBottlesPercentage > 80) {
       return 1;
@@ -62,7 +62,7 @@ class StatusBar extends DrawableObject {
     if (this.coinsPercentage > 100) {
       this.coinsPercentage = 100;
     }
-    this.setCoinsPercentage(this.coinsPercentage);
+    this.setCoinsAndBottlesPercentage(this.coinsPercentage);
   }
 
   addBottlesPoints(points) {
@@ -70,6 +70,6 @@ class StatusBar extends DrawableObject {
     if (this.bottlesPercentage > 100) {
       this.bottlesPercentage = 100;
     }
-    this.setBottlesPercentage(this.bottlesPercentage);
+    this.setCoinsAndBottlesPercentage(this.bottlesPercentage);
   }
 }

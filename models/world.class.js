@@ -163,9 +163,11 @@ class World {
       if (this.character.throwBottle()) {
         let bottle = new ThorableObject(this.character.x + 50, this.character.y);
         this.throwableObjects.push(bottle);
-        this.throwBottle_sound.play();
         this.canThrow = false;
         this.statusBarBottles.addBottlesPoints(-10);
+        if(!this.mute) {
+          this.throwBottle_sound.play();
+        }
       }
     }
     if (!this.keyboard.ATTACK) {
@@ -191,7 +193,9 @@ class World {
           if (enemy instanceof Endboss) {
             this.character.energy -= 5;
             this.statusBar.setHealthPercentage(this.character.energy);
-            this.charHurt_sound.play();
+            if(!this.mute) {
+              this.charHurt_sound.play();
+            }
 
             if (this.character.energy <= 0) {
               this.character.energy = 0;
@@ -206,15 +210,18 @@ class World {
             enemy.dead();
             this.character.speedY = 25;
             enemy.speed = 0;
-            this.enemyHurt_sound.play();
+            if(!this.mute) {
+              this.enemyHurt_sound.play();
+            }
             setTimeout(() => {
               this.level.enemies = this.level.enemies.filter((e) => e !== enemy);
             }, 1000);
           } else {
             this.character.hit();
             this.statusBar.setHealthPercentage(this.character.energy);
-            this.charHurt_sound.play();
-
+            if(!this.mute) {
+              this.charHurt_sound.play();
+            }
             if (this.character.energy <= 0) {
               this.gameOver = true;
               this.charHurt_sound.pause();
@@ -230,7 +237,9 @@ class World {
         this.level.coin.splice(this.level.coin.indexOf(coin), 1);
         this.character.collectCoin();
         this.statusBarCoins.addPoints(10);
-        this.coin_sound.play();
+        if(!this.mute) {
+          this.coin_sound.play();
+        }
       }
     });
 
@@ -239,6 +248,9 @@ class World {
         this.level.bottles.splice(this.level.bottles.indexOf(bottle), 1);
         this.character.collectBottle();
         this.statusBarBottles.addBottlesPoints(10);
+        if(!this.mute) {
+          this.coin_sound.play();
+        }
       }
     });
 
@@ -251,8 +263,9 @@ class World {
             this.endbossEnergy.setHealthPercentage(enemy.energy);
             if (enemy.isDead) {
               enemy.dead();
-              this.enemyHurt_sound.play();
-
+              if(!this.mute) {
+                this.enemyHurt_sound.play();
+              }
               setTimeout(() => {
                 this.level.enemies.splice(this.level.enemies.indexOf(enemy), 1);
                 this.gameWon = true;
@@ -271,7 +284,7 @@ class World {
     if (this.gameOverScreenShown) return;
     this.gameOverScreenShown = true;
 
-    if (!this.gameOverSoundPlayed) {
+    if (!this.gameOverSoundPlayed && !this.mute) {
       this.background_sound.pause();
       this.gameOver_sound.play();
       this.gameOverSoundPlayed = true;
@@ -305,7 +318,7 @@ class World {
     const winImage = new Image();
     winImage.src = "img/9_intro_outro_screens/win/win_2.png";
 
-    if (!this.gameWinSoundPlayed) {
+    if (!this.gameWinSoundPlayed && !this.mute) {
       this.background_sound.pause();
       this.gameWin_sound.play();
       this.gameWinSoundPlayed = true;
